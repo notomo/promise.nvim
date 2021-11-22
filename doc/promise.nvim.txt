@@ -3,50 +3,80 @@
 ==============================================================================
 Lua module: promise                                     *promise.nvim-promise*
 
-new({f})                                                       *promise.new()*
-  TODO doc
+new({executor})                                                *promise.new()*
+  Equivalents to JavaScript's Promise.new.
 
   Parameters: ~
-    {f} (function) 
+    {executor} (function) `(resolve: function(...), reject: function(...))`
 
-resolve()                                                  *promise.resolve()*
-  TODO doc
-    {...} (any) 
+  Return: ~
+    (table) Promise
 
-reject()                                                    *promise.reject()*
-  TODO doc
-    {...} (any) 
-
-next({on_fullfilled}, {on_rejected})                          *promise.next()*
-  TODO doc
+resolve({...})                                             *promise.resolve()*
+  Returns a fulfilled promise.
+  But if the first argument is promise, returns the promise.
 
   Parameters: ~
-    {on_fullfilled} (function|nil) 
-    {on_rejected} (function|nil) 
+    {...} (any) one promise or non-promises
 
-catch({on_rejected})                                         *promise.catch()*
-  TODO doc
+  Return: ~
+    (table) Promise
+
+reject({...})                                               *promise.reject()*
+  Returns a rejected promise.
+  But if the first argument is promise, returns the promise.
 
   Parameters: ~
-    {on_rejected} (function|nil) 
+    {...} (any) one promise or non-promises
 
-finally({on_finally})                                      *promise.finally()*
-  TODO doc
+  Return: ~
+    (table) Promise
+
+next({on_fullfilled}, {on_rejected})                          *promise:next()*
+  Equivalents to JavaScript's Promise.then.
+
+  Parameters: ~
+    {on_fullfilled} (function|nil) A callback on fullfilled.
+    {on_rejected} (function|nil) A callback on rejected.
+
+  Return: ~
+    (table) Promise
+
+catch({on_rejected})                                         *promise:catch()*
+  Equivalents to JavaScript's Promise.catch.
+
+  Parameters: ~
+    {on_rejected} (function|nil) A callback on rejected.
+
+  Return: ~
+    (table) Promise
+
+finally({on_finally})                                      *promise:finally()*
+  Equivalents to JavaScript's Promise.finally.
 
   Parameters: ~
     {on_finally} (function) 
 
+  Return: ~
+    (table) Promise
+
 all({list})                                                    *promise.all()*
-  TODO doc
+  Equivalents to JavaScript's Promise.all.
 
   Parameters: ~
-    {list} (table) 
+    {list} (table) promise or non-promise values
+
+  Return: ~
+    (table) Promise
 
 race({list})                                                  *promise.race()*
-  TODO doc
+  Equivalents to JavaScript's Promise.race.
 
   Parameters: ~
-    {list} (table) 
+    {list} (table) promise or non-promise values
+
+  Return: ~
+    (table) Promise
 
 ==============================================================================
 EXAMPLES                                               *promise.nvim-EXAMPLES*
