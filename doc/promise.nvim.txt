@@ -62,6 +62,7 @@ finally({on_finally})                                      *promise:finally()*
 
 all({list})                                                    *promise.all()*
   Equivalents to JavaScript's Promise.all.
+  Even if multiple value are resolved, results includes only the first value.
 
   Parameters: ~
     {list} (table) promise or non-promise values

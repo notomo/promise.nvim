@@ -94,9 +94,9 @@ end
 --- @vararg any: one promise or non-promises
 --- @return table: Promise
 function Promise.resolve(...)
-  local v = ...
-  if is_promise(v) then
-    return v
+  local first = ...
+  if is_promise(first) then
+    return first
   end
   local value = PackedValue.new(...)
   return Promise.new(function(resolve, _)
@@ -109,9 +109,9 @@ end
 --- @vararg any: one promise or non-promises
 --- @return table: Promise
 function Promise.reject(...)
-  local v = ...
-  if is_promise(v) then
-    return v
+  local first = ...
+  if is_promise(first) then
+    return first
   end
   local value = PackedValue.new(...)
   return Promise.new(function(_, reject)
@@ -204,6 +204,7 @@ function Promise.next(self, on_fullfilled, on_rejected)
     on_rejected = {on_rejected, "function", true},
   })
   local promise = new_pending(on_fullfilled, on_rejected)
+  table.insert(self._queued, promise)
   vim.schedule(function()
     if self._status == PromiseStatus.Fulfilled then
       return self:_resolve(self._value:unpack())
@@ -212,7 +213,6 @@ function Promise.next(self, on_fullfilled, on_rejected)
       return self:_reject(self._value:unpack())
     end
   end)
-  table.insert(self._queued, promise)
   return promise
 end
 
@@ -233,25 +233,23 @@ function Promise.finally(self, on_finally)
     return ...
   end):catch(function(...)
     on_finally()
-    local value = PackedValue.new(...)
-    return Promise.new(function(_, reject)
-      reject(value:unpack())
-    end)
+    return Promise.reject(...)
   end)
 end
 
 --- Equivalents to JavaScript's Promise.all.
+--- Even if multiple value are resolved, results includes only the first value.
 --- @param list table: promise or non-promise values
 --- @return table: Promise
 function Promise.all(list)
   vim.validate({list = {list, "table"}})
-  local remain = #list
-  local results = {}
   return Promise.new(function(resolve, reject)
+    local remain = #list
     if remain == 0 then
-      return resolve(results)
+      return resolve({})
     end
 
+    local results = {}
     for i, e in ipairs(list) do
       Promise.resolve(e):next(function(...)
         -- use only the first argument
