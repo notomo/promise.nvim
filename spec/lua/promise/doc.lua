@@ -43,7 +43,7 @@ local gen_readme = function()
 # promise.nvim
 
 This implements `Promise` to use with neovim lua.
-Mainly used by embedding `lua/promise/*.lua` in plugins.
+Mainly used by embedding `lua/promise/init.lua` in plugins.
 
 ## Example
 

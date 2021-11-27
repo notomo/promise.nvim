@@ -1,4 +1,4 @@
-local plugin_name = "promise"
+local plugin_name = vim.split((...):gsub("%.", "/"), "/", true)[1]
 local helper = require("vusted.helper")
 
 helper.root = helper.find_plugin_root(plugin_name)
@@ -28,4 +28,12 @@ function helper.on_finished()
   })
 end
 
-package.loaded["test.helper"] = helper
+function helper.wait(promise)
+  local on_finished = helper.on_finished()
+  promise:finally(function()
+    on_finished()
+  end)
+  on_finished:wait()
+end
+
+return helper

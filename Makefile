@@ -1,5 +1,5 @@
 test:
-	vusted --shuffle --helper=./spec/lua/promise/helper.lua
+	vusted --shuffle
 .PHONY: test
 
 doc:
