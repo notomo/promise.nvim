@@ -8,6 +8,7 @@ end
 
 function helper.after_each()
   helper.cleanup_loaded_modules(plugin_name)
+  vim.cmd([[lua collectgarbage("collect")]])
 end
 
 function helper.on_finished()

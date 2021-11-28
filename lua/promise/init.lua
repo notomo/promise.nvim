@@ -34,11 +34,8 @@ local is_promise = function(v)
   return getmetatable(v) == Promise
 end
 
-local new_any_userdata = function()
-  local userdata = vim.loop.new_async(function()
-  end)
-  userdata:close()
-  return userdata
+local new_empty_userdata = function()
+  return newproxy(true)
 end
 
 local new_pending = function(on_fullfilled, on_rejected)
@@ -53,11 +50,12 @@ local new_pending = function(on_fullfilled, on_rejected)
     _on_fullfilled = on_fullfilled,
     _on_rejected = on_rejected,
     _handled = false,
-    _unhandled_detector = new_any_userdata(),
   }
   local self = setmetatable(tbl, Promise)
 
-  getmetatable(tbl._unhandled_detector).__gc = function()
+  local userdata = new_empty_userdata()
+  self._unhandled_detector = setmetatable({[self] = userdata}, {__mode = "k"})
+  getmetatable(userdata).__gc = function()
     if self._status ~= PromiseStatus.Rejected or self._handled then
       return
     end
