@@ -61,7 +61,8 @@ local new_pending = function(on_fullfilled, on_rejected)
     end
     self._handled = true
     vim.schedule(function()
-      error("unhandled promise rejection: " .. vim.inspect({self._value:unpack()}))
+      local values = vim.inspect({self._value:unpack()}, {newline = "", indent = ""})
+      error("unhandled promise rejection: " .. values, 0)
     end)
   end
 
