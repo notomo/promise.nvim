@@ -62,7 +62,7 @@ finally({on_finally})                                      *promise:finally()*
 
 all({list})                                                    *promise.all()*
   Equivalents to JavaScript's Promise.all.
-  Even if multiple value are resolved, results includes only the first value.
+  Even if multiple value are resolved, results include only the first value.
 
   Parameters: ~
     {list} (table) promise or non-promise values
@@ -72,6 +72,16 @@ all({list})                                                    *promise.all()*
 
 race({list})                                                  *promise.race()*
   Equivalents to JavaScript's Promise.race.
+
+  Parameters: ~
+    {list} (table) promise or non-promise values
+
+  Return: ~
+    (table) Promise
+
+any({list})                                                    *promise.any()*
+  Equivalents to JavaScript's Promise.any.
+  Even if multiple value are rejected, errors include only the first value.
 
   Parameters: ~
     {list} (table) promise or non-promise values
@@ -121,6 +131,10 @@ EXAMPLES                                               *promise.nvim-EXAMPLES*
   end)
 
   Promise.race({do_async(1), do_async(3), do_async(5)}):next(function(value)
+    assert(value == "ok1")
+  end)
+
+  Promise.any({do_async(1), do_async(2)}):next(function(value)
     assert(value == "ok1")
   end)
 <

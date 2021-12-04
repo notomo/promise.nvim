@@ -38,6 +38,10 @@ end)
 Promise.race({do_async(1), do_async(3), do_async(5)}):next(function(value)
   assert(value == "ok1")
 end)
+
+Promise.any({do_async(1), do_async(2)}):next(function(value)
+  assert(value == "ok1")
+end)
 local wait = {finished = false}
 do_async(33):next(function()
 end):next(function()

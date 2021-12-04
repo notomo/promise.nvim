@@ -237,7 +237,7 @@ function Promise.finally(self, on_finally)
 end
 
 --- Equivalents to JavaScript's Promise.all.
---- Even if multiple value are resolved, results includes only the first value.
+--- Even if multiple value are resolved, results include only the first value.
 --- @param list table: promise or non-promise values
 --- @return table: Promise
 function Promise.all(list)
@@ -275,6 +275,34 @@ function Promise.race(list)
         resolve(...)
       end):catch(function(...)
         reject(...)
+      end)
+    end
+  end)
+end
+
+--- Equivalents to JavaScript's Promise.any.
+--- Even if multiple value are rejected, errors include only the first value.
+--- @param list table: promise or non-promise values
+--- @return table: Promise
+function Promise.any(list)
+  vim.validate({list = {list, "table"}})
+  return Promise.new(function(resolve, reject)
+    local remain = #list
+    if remain == 0 then
+      return reject({})
+    end
+
+    local errs = {}
+    for i, e in ipairs(list) do
+      Promise.resolve(e):next(function(...)
+        resolve(...)
+      end):catch(function(...)
+        -- use only the first argument
+        errs[i] = ...
+        if remain == 1 then
+          return reject(errs)
+        end
+        remain = remain - 1
       end)
     end
   end)
