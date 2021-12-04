@@ -156,7 +156,7 @@ function Promise._start_resolve(self, value)
 end
 
 function Promise._reject(self, ...)
-  if self._status == PromiseStatus.Resolved then
+  if self._status == PromiseStatus.Fulfilled then
     return
   end
   self._status = PromiseStatus.Rejected
