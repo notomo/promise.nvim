@@ -89,6 +89,16 @@ any({list})                                                    *promise.any()*
   Return: ~
     (table) Promise
 
+all_settled({list})                                    *promise.all_settled()*
+  Equivalents to JavaScript's Promise.allSettled.
+  Even if multiple value are resolved/rejected, value/reason is only the first value.
+
+  Parameters: ~
+    {list} (table) promise or non-promise values
+
+  Return: ~
+    (table) Promise
+
 ==============================================================================
 EXAMPLES                                               *promise.nvim-EXAMPLES*
 
@@ -136,6 +146,13 @@ EXAMPLES                                               *promise.nvim-EXAMPLES*
 
   Promise.any({do_async(1), do_async(2)}):next(function(value)
     assert(value == "ok1")
+  end)
+
+  Promise.all_settled({do_async(1), do_async(2)}):next(function(values)
+    assert(values[1].value == "ok1")
+    assert(values[1].status == "fulfilled")
+    assert(values[2].reason == "error")
+    assert(values[2].status == "rejected")
   end)
 <
 

@@ -50,4 +50,11 @@ end)
 Promise.any({do_async(1), do_async(2)}):next(function(value)
   assert(value == "ok1")
 end)
+
+Promise.all_settled({do_async(1), do_async(2)}):next(function(values)
+  assert(values[1].value == "ok1")
+  assert(values[1].status == "fulfilled")
+  assert(values[2].reason == "error")
+  assert(values[2].status == "rejected")
+end)
 ```
