@@ -1,3 +1,5 @@
+local vim = vim
+
 local PackedValue = {}
 PackedValue.__index = PackedValue
 
@@ -22,8 +24,6 @@ function PackedValue.first(self)
   local first = self:unpack()
   return first
 end
-
-local vim = vim
 
 local Promise = {}
 Promise.__index = Promise
@@ -251,8 +251,8 @@ function Promise.all(list)
     local results = {}
     for i, e in ipairs(list) do
       Promise.resolve(e):next(function(...)
-        -- use only the first argument
-        results[i] = ...
+        local first = ...
+        results[i] = first
         if remain == 1 then
           return resolve(results)
         end
@@ -297,8 +297,8 @@ function Promise.any(list)
       Promise.resolve(e):next(function(...)
         resolve(...)
       end):catch(function(...)
-        -- use only the first argument
-        errs[i] = ...
+        local first = ...
+        errs[i] = first
         if remain == 1 then
           return reject(errs)
         end
@@ -323,11 +323,9 @@ function Promise.all_settled(list)
     local results = {}
     for i, e in ipairs(list) do
       Promise.resolve(e):next(function(...)
-        -- use only the first argument
         local first = ...
         results[i] = {status = PromiseStatus.Fulfilled, value = first}
       end):catch(function(...)
-        -- use only the first argument
         local first = ...
         results[i] = {status = PromiseStatus.Rejected, reason = first}
       end):finally(function()
