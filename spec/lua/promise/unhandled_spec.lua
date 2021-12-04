@@ -15,7 +15,7 @@ describe("unhandled rejection detector", function()
         on_finished()
       end)
       -- should raise error if the following `catch` is commented out.
-      -- but no error occurs if tests are filtered to only this describe.
+      -- but no error occurs if tests are filtered to only this `it`.
       p:catch(function()
       end)
     end
