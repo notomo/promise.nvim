@@ -32,4 +32,31 @@ describe("Promise.new()", function()
     assert.equal(want, got)
   end)
 
+  it("is resolved even if reject() is called after resolve()", function()
+    local rejected = false
+    local p = Promise.new(function(resolve, reject)
+      resolve()
+      reject()
+    end):catch(function()
+      rejected = true
+    end)
+
+    helper.wait(p)
+    assert.is_false(rejected)
+  end)
+
+  it("is rejected even if resolve() is called after reject()", function()
+    local resolved = false
+    local p = Promise.new(function(resolve, reject)
+      reject()
+      resolve()
+    end):next(function()
+      resolved = true
+    end):catch(function()
+    end)
+
+    helper.wait(p)
+    assert.is_false(resolved)
+  end)
+
 end)
