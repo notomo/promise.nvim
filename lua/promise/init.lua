@@ -5,7 +5,7 @@ PackedValue.__index = PackedValue
 
 function PackedValue.new(...)
   local values = vim.F.pack_len(...)
-  local tbl = {_values = values}
+  local tbl = { _values = values }
   return setmetatable(tbl, PackedValue)
 end
 
@@ -28,7 +28,7 @@ end
 local Promise = {}
 Promise.__index = Promise
 
-local PromiseStatus = {Pending = "pending", Fulfilled = "fulfilled", Rejected = "rejected"}
+local PromiseStatus = { Pending = "pending", Fulfilled = "fulfilled", Rejected = "rejected" }
 
 local is_promise = function(v)
   return getmetatable(v) == Promise
@@ -40,8 +40,8 @@ end
 
 local new_pending = function(on_fullfilled, on_rejected)
   vim.validate({
-    on_fullfilled = {on_fullfilled, "function", true},
-    on_rejected = {on_rejected, "function", true},
+    on_fullfilled = { on_fullfilled, "function", true },
+    on_rejected = { on_rejected, "function", true },
   })
   local tbl = {
     _status = PromiseStatus.Pending,
@@ -54,14 +54,14 @@ local new_pending = function(on_fullfilled, on_rejected)
   local self = setmetatable(tbl, Promise)
 
   local userdata = new_empty_userdata()
-  self._unhandled_detector = setmetatable({[self] = userdata}, {__mode = "k"})
+  self._unhandled_detector = setmetatable({ [self] = userdata }, { __mode = "k" })
   getmetatable(userdata).__gc = function()
     if self._status ~= PromiseStatus.Rejected or self._handled then
       return
     end
     self._handled = true
     vim.schedule(function()
-      local values = vim.inspect({self._value:unpack()}, {newline = "", indent = ""})
+      local values = vim.inspect({ self._value:unpack() }, { newline = "", indent = "" })
       error("unhandled promise rejection: " .. values, 0)
     end)
   end
@@ -73,7 +73,7 @@ end
 --- @param executor function: `(resolve: function(...), reject: function(...))`
 --- @return table: Promise
 function Promise.new(executor)
-  vim.validate({executor = {executor, "function"}})
+  vim.validate({ executor = { executor, "function" } })
 
   local self = new_pending()
 
@@ -148,11 +148,13 @@ function Promise._start_resolve(self, value)
       self:_resolve(result:unpack())
     end)
   end
-  first:next(function(...)
-    self:_resolve(...)
-  end):catch(function(...)
-    self:_reject(...)
-  end)
+  first
+    :next(function(...)
+      self:_resolve(...)
+    end)
+    :catch(function(...)
+      self:_reject(...)
+    end)
 end
 
 function Promise._reject(self, ...)
@@ -186,11 +188,13 @@ function Promise._start_reject(self, value)
       self:_reject(result:unpack())
     end)
   end
-  first:next(function(...)
-    self:_resolve(...)
-  end):catch(function(...)
-    self:_reject(...)
-  end)
+  first
+    :next(function(...)
+      self:_resolve(...)
+    end)
+    :catch(function(...)
+      self:_reject(...)
+    end)
 end
 
 --- Equivalents to JavaScript's Promise.then.
@@ -199,8 +203,8 @@ end
 --- @return table: Promise
 function Promise.next(self, on_fullfilled, on_rejected)
   vim.validate({
-    on_fullfilled = {on_fullfilled, "function", true},
-    on_rejected = {on_rejected, "function", true},
+    on_fullfilled = { on_fullfilled, "function", true },
+    on_rejected = { on_rejected, "function", true },
   })
   local promise = new_pending(on_fullfilled, on_rejected)
   table.insert(self._queued, promise)
@@ -226,14 +230,16 @@ end
 --- @param on_finally function
 --- @return table: Promise
 function Promise.finally(self, on_finally)
-  vim.validate({on_finally = {on_finally, "function", true}})
-  return self:next(function(...)
-    on_finally()
-    return ...
-  end):catch(function(...)
-    on_finally()
-    return Promise.reject(...)
-  end)
+  vim.validate({ on_finally = { on_finally, "function", true } })
+  return self
+    :next(function(...)
+      on_finally()
+      return ...
+    end)
+    :catch(function(...)
+      on_finally()
+      return Promise.reject(...)
+    end)
 end
 
 --- Equivalents to JavaScript's Promise.all.
@@ -241,7 +247,7 @@ end
 --- @param list table: promise or non-promise values
 --- @return table: Promise
 function Promise.all(list)
-  vim.validate({list = {list, "table"}})
+  vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve, reject)
     local remain = #list
     if remain == 0 then
@@ -250,16 +256,18 @@ function Promise.all(list)
 
     local results = {}
     for i, e in ipairs(list) do
-      Promise.resolve(e):next(function(...)
-        local first = ...
-        results[i] = first
-        if remain == 1 then
-          return resolve(results)
-        end
-        remain = remain - 1
-      end):catch(function(...)
-        reject(...)
-      end)
+      Promise.resolve(e)
+        :next(function(...)
+          local first = ...
+          results[i] = first
+          if remain == 1 then
+            return resolve(results)
+          end
+          remain = remain - 1
+        end)
+        :catch(function(...)
+          reject(...)
+        end)
     end
   end)
 end
@@ -268,14 +276,16 @@ end
 --- @param list table: promise or non-promise values
 --- @return table: Promise
 function Promise.race(list)
-  vim.validate({list = {list, "table"}})
+  vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve, reject)
     for _, e in ipairs(list) do
-      Promise.resolve(e):next(function(...)
-        resolve(...)
-      end):catch(function(...)
-        reject(...)
-      end)
+      Promise.resolve(e)
+        :next(function(...)
+          resolve(...)
+        end)
+        :catch(function(...)
+          reject(...)
+        end)
     end
   end)
 end
@@ -285,7 +295,7 @@ end
 --- @param list table: promise or non-promise values
 --- @return table: Promise
 function Promise.any(list)
-  vim.validate({list = {list, "table"}})
+  vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve, reject)
     local remain = #list
     if remain == 0 then
@@ -294,16 +304,18 @@ function Promise.any(list)
 
     local errs = {}
     for i, e in ipairs(list) do
-      Promise.resolve(e):next(function(...)
-        resolve(...)
-      end):catch(function(...)
-        local first = ...
-        errs[i] = first
-        if remain == 1 then
-          return reject(errs)
-        end
-        remain = remain - 1
-      end)
+      Promise.resolve(e)
+        :next(function(...)
+          resolve(...)
+        end)
+        :catch(function(...)
+          local first = ...
+          errs[i] = first
+          if remain == 1 then
+            return reject(errs)
+          end
+          remain = remain - 1
+        end)
     end
   end)
 end
@@ -313,7 +325,7 @@ end
 --- @param list table: promise or non-promise values
 --- @return table: Promise
 function Promise.all_settled(list)
-  vim.validate({list = {list, "table"}})
+  vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve)
     local remain = #list
     if remain == 0 then
@@ -322,18 +334,21 @@ function Promise.all_settled(list)
 
     local results = {}
     for i, e in ipairs(list) do
-      Promise.resolve(e):next(function(...)
-        local first = ...
-        results[i] = {status = PromiseStatus.Fulfilled, value = first}
-      end):catch(function(...)
-        local first = ...
-        results[i] = {status = PromiseStatus.Rejected, reason = first}
-      end):finally(function()
-        if remain == 1 then
-          return resolve(results)
-        end
-        remain = remain - 1
-      end)
+      Promise.resolve(e)
+        :next(function(...)
+          local first = ...
+          results[i] = { status = PromiseStatus.Fulfilled, value = first }
+        end)
+        :catch(function(...)
+          local first = ...
+          results[i] = { status = PromiseStatus.Rejected, reason = first }
+        end)
+        :finally(function()
+          if remain == 1 then
+            return resolve(results)
+          end
+          remain = remain - 1
+        end)
     end
   end)
 end

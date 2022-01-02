@@ -2,7 +2,6 @@ local helper = require("promise.lib.testlib.helper")
 local Promise = helper.require("promise")
 
 describe("Promise.all()", function()
-
   before_each(helper.before_each)
   after_each(helper.after_each)
 
@@ -23,7 +22,7 @@ describe("Promise.all()", function()
     end)
     on_finished:wait()
 
-    assert.is_same({1, 2, 3}, got)
+    assert.is_same({ 1, 2, 3 }, got)
   end)
 
   it("resolves even if empty", function()
@@ -57,5 +56,4 @@ describe("Promise.all()", function()
 
     assert.equal(want, got)
   end)
-
 end)

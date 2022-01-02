@@ -2,7 +2,6 @@ local helper = require("promise.lib.testlib.helper")
 local Promise = helper.require("promise")
 
 describe("Promise.new()", function()
-
   before_each(helper.before_each)
   after_each(helper.after_each)
 
@@ -50,13 +49,13 @@ describe("Promise.new()", function()
     local p = Promise.new(function(resolve, reject)
       reject()
       resolve()
-    end):next(function()
-      resolved = true
-    end):catch(function()
     end)
+      :next(function()
+        resolved = true
+      end)
+      :catch(function() end)
 
     helper.wait(p)
     assert.is_false(resolved)
   end)
-
 end)

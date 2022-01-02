@@ -2,7 +2,6 @@ local helper = require("promise.lib.testlib.helper")
 local Promise = helper.require("promise")
 
 describe("Promise.race()", function()
-
   before_each(helper.before_each)
   after_each(helper.after_each)
 
@@ -62,5 +61,4 @@ describe("Promise.race()", function()
 
     assert.equal(want, got)
   end)
-
 end)

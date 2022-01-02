@@ -2,7 +2,6 @@ local helper = require("promise.lib.testlib.helper")
 local Promise = helper.require("promise")
 
 describe("unhandled rejection detector", function()
-
   before_each(helper.before_each)
   after_each(helper.after_each)
 
@@ -16,8 +15,7 @@ describe("unhandled rejection detector", function()
       end)
       -- should raise error if the following `catch` is commented out.
       -- but no error occurs if tests are filtered to only this `it`.
-      p:catch(function()
-      end)
+      p:catch(function() end)
     end
     on_finished:wait()
   end)
@@ -27,12 +25,12 @@ describe("unhandled rejection detector", function()
     do
       Promise.new(function(_, reject)
         reject("should handled2")
-      end):finally(function()
-        on_finished()
-      end):catch(function()
       end)
+        :finally(function()
+          on_finished()
+        end)
+        :catch(function() end)
     end
     on_finished:wait()
   end)
-
 end)

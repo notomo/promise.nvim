@@ -2,7 +2,6 @@ local helper = require("promise.lib.testlib.helper")
 local Promise = helper.require("promise")
 
 describe("Promise.reject()", function()
-
   before_each(helper.before_each)
   after_each(helper.after_each)
 
@@ -21,11 +20,11 @@ describe("Promise.reject()", function()
     local want1, want2 = "error1", "error2"
     local got
     local p = Promise.reject(want1, want2):catch(function(...)
-      got = {...}
+      got = { ... }
     end)
 
     helper.wait(p)
-    assert.is_same({want1, want2}, got)
+    assert.is_same({ want1, want2 }, got)
   end)
 
   it("if the argument is a promise, returns the promise", function()
@@ -36,10 +35,7 @@ describe("Promise.reject()", function()
 
     assert.equal(p1, p2)
 
-    p1:catch(function()
-    end)
-    p2:catch(function()
-    end)
+    p1:catch(function() end)
+    p2:catch(function() end)
   end)
-
 end)
