@@ -1,4 +1,4 @@
-local helper = require("promise.lib.testlib.helper")
+local helper = require("promise.test.helper")
 local Promise = helper.require("promise")
 
 describe("promise:finally()", function()
