@@ -58,4 +58,30 @@ describe("Promise.new()", function()
     helper.wait(p)
     assert.is_false(resolved)
   end)
+
+  it("can receive resolved promise by resolve()", function()
+    local want = "ok"
+    local got
+    local p = Promise.new(function(resolve)
+      resolve(Promise.resolve(want))
+    end):next(function(v)
+      got = v
+    end)
+
+    helper.wait(p)
+    assert.equal(want, got)
+  end)
+
+  it("can receive rejected promise by resolve()", function()
+    local want = "error"
+    local got
+    local p = Promise.new(function(resolve)
+      resolve(Promise.reject(want))
+    end):catch(function(v)
+      got = v
+    end)
+
+    helper.wait(p)
+    assert.equal(want, got)
+  end)
 end)

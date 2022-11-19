@@ -78,6 +78,17 @@ function Promise.new(executor)
   local self = new_pending()
 
   local resolve = function(...)
+    local first = ...
+    if is_promise(first) then
+      first
+        :next(function(...)
+          self:_resolve(...)
+        end)
+        :catch(function(...)
+          self:_reject(...)
+        end)
+      return
+    end
     self:_resolve(...)
   end
   local reject = function(...)
