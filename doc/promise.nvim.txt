@@ -102,7 +102,7 @@ all_settled({list})                                    *promise.all_settled()*
 ==============================================================================
 EXAMPLES                                               *promise.nvim-EXAMPLES*
 
->
+>lua
   local Promise = require("promise")
 
   Promise.resolve("ok")

@@ -28,6 +28,7 @@ require("genvdoc").generate("promise.nvim", {
             exclude = exclude or line:match("finished")
             return not exclude
           end,
+          language = "lua",
         })
       end,
     },
