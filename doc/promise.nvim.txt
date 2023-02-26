@@ -7,10 +7,10 @@ new({executor})                                                *promise.new()*
   Equivalents to JavaScript's Promise.new.
 
   Parameters: ~
-    {executor} (function) `(resolve: function(...), reject: function(...))`
+    {executor} (fun(resolve:fun(...:any),reject:fun(...:any))) 
 
   Return: ~
-    (table) Promise
+    (Promise) 
 
 resolve({...})                                             *promise.resolve()*
   Returns a fulfilled promise.
@@ -20,7 +20,7 @@ resolve({...})                                             *promise.resolve()*
     {...} (any) one promise or non-promises
 
   Return: ~
-    (table) Promise
+    (Promise) 
 
 reject({...})                                               *promise.reject()*
   Returns a rejected promise.
@@ -30,74 +30,74 @@ reject({...})                                               *promise.reject()*
     {...} (any) one promise or non-promises
 
   Return: ~
-    (table) Promise
+    (Promise) 
 
 next({on_fullfilled}, {on_rejected})                          *promise:next()*
   Equivalents to JavaScript's Promise.then.
 
   Parameters: ~
-    {on_fullfilled} (function|nil) A callback on fullfilled.
-    {on_rejected} (function|nil) A callback on rejected.
+    {on_fullfilled} ((fun(...:any):any)?) A callback on fullfilled.
+    {on_rejected} ((fun(...:any):any)?) A callback on rejected.
 
   Return: ~
-    (table) Promise
+    (Promise) 
 
 catch({on_rejected})                                         *promise:catch()*
   Equivalents to JavaScript's Promise.catch.
 
   Parameters: ~
-    {on_rejected} (function|nil) A callback on rejected.
+    {on_rejected} ((fun(...:any):any)?) A callback on rejected.
 
   Return: ~
-    (table) Promise
+    (Promise) 
 
 finally({on_finally})                                      *promise:finally()*
   Equivalents to JavaScript's Promise.finally.
 
   Parameters: ~
-    {on_finally} (function) 
+    {on_finally} (fun()) 
 
   Return: ~
-    (table) Promise
+    (Promise) 
 
 all({list})                                                    *promise.all()*
   Equivalents to JavaScript's Promise.all.
   Even if multiple value are resolved, results include only the first value.
 
   Parameters: ~
-    {list} (table) promise or non-promise values
+    {list} (any[]) promise or non-promise values
 
   Return: ~
-    (table) Promise
+    (Promise) 
 
 race({list})                                                  *promise.race()*
   Equivalents to JavaScript's Promise.race.
 
   Parameters: ~
-    {list} (table) promise or non-promise values
+    {list} (any[]) promise or non-promise values
 
   Return: ~
-    (table) Promise
+    (Promise) 
 
 any({list})                                                    *promise.any()*
   Equivalents to JavaScript's Promise.any.
   Even if multiple value are rejected, errors include only the first value.
 
   Parameters: ~
-    {list} (table) promise or non-promise values
+    {list} (any[]) promise or non-promise values
 
   Return: ~
-    (table) Promise
+    (Promise) 
 
 all_settled({list})                                    *promise.all_settled()*
   Equivalents to JavaScript's Promise.allSettled.
   Even if multiple value are resolved/rejected, value/reason is only the first value.
 
   Parameters: ~
-    {list} (table) promise or non-promise values
+    {list} (any[]) promise or non-promise values
 
   Return: ~
-    (table) Promise
+    (Promise) 
 
 ==============================================================================
 EXAMPLES                                               *promise.nvim-EXAMPLES*

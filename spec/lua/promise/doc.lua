@@ -13,7 +13,7 @@ require("genvdoc").generate("promise.nvim", {
         return "Lua module: " .. group
       end,
       group = function(node)
-        if not node.declaration then
+        if node.declaration == nil or node.declaration.type ~= "function" then
           return nil
         end
         return node.declaration.module

@@ -25,6 +25,7 @@ function PackedValue.first(self)
   return first
 end
 
+--- @class Promise
 local Promise = {}
 Promise.__index = Promise
 
@@ -70,8 +71,8 @@ local new_pending = function(on_fullfilled, on_rejected)
 end
 
 --- Equivalents to JavaScript's Promise.new.
---- @param executor function: `(resolve: function(...), reject: function(...))`
---- @return table: Promise
+--- @param executor fun(resolve:fun(...:any),reject:fun(...:any))
+--- @return Promise
 function Promise.new(executor)
   vim.validate({ executor = { executor, "function" } })
 
@@ -101,8 +102,8 @@ end
 
 --- Returns a fulfilled promise.
 --- But if the first argument is promise, returns the promise.
---- @vararg any: one promise or non-promises
---- @return table: Promise
+--- @param ... any: one promise or non-promises
+--- @return Promise
 function Promise.resolve(...)
   local first = ...
   if is_promise(first) then
@@ -116,8 +117,8 @@ end
 
 --- Returns a rejected promise.
 --- But if the first argument is promise, returns the promise.
---- @vararg any: one promise or non-promises
---- @return table: Promise
+--- @param ... any: one promise or non-promises
+--- @return Promise
 function Promise.reject(...)
   local first = ...
   if is_promise(first) then
@@ -209,9 +210,9 @@ function Promise._start_reject(self, value)
 end
 
 --- Equivalents to JavaScript's Promise.then.
---- @param on_fullfilled function|nil: A callback on fullfilled.
---- @param on_rejected function|nil: A callback on rejected.
---- @return table: Promise
+--- @param on_fullfilled (fun(...:any):any)?: A callback on fullfilled.
+--- @param on_rejected (fun(...:any):any)?: A callback on rejected.
+--- @return Promise
 function Promise.next(self, on_fullfilled, on_rejected)
   vim.validate({
     on_fullfilled = { on_fullfilled, "function", true },
@@ -231,15 +232,15 @@ function Promise.next(self, on_fullfilled, on_rejected)
 end
 
 --- Equivalents to JavaScript's Promise.catch.
---- @param on_rejected function|nil: A callback on rejected.
---- @return table: Promise
+--- @param on_rejected (fun(...:any):any)?: A callback on rejected.
+--- @return Promise
 function Promise.catch(self, on_rejected)
   return self:next(nil, on_rejected)
 end
 
 --- Equivalents to JavaScript's Promise.finally.
---- @param on_finally function
---- @return table: Promise
+--- @param on_finally fun()
+--- @return Promise
 function Promise.finally(self, on_finally)
   vim.validate({ on_finally = { on_finally, "function", true } })
   return self
@@ -255,8 +256,8 @@ end
 
 --- Equivalents to JavaScript's Promise.all.
 --- Even if multiple value are resolved, results include only the first value.
---- @param list table: promise or non-promise values
---- @return table: Promise
+--- @param list any[]: promise or non-promise values
+--- @return Promise
 function Promise.all(list)
   vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve, reject)
@@ -284,8 +285,8 @@ function Promise.all(list)
 end
 
 --- Equivalents to JavaScript's Promise.race.
---- @param list table: promise or non-promise values
---- @return table: Promise
+--- @param list any[]: promise or non-promise values
+--- @return Promise
 function Promise.race(list)
   vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve, reject)
@@ -303,8 +304,8 @@ end
 
 --- Equivalents to JavaScript's Promise.any.
 --- Even if multiple value are rejected, errors include only the first value.
---- @param list table: promise or non-promise values
---- @return table: Promise
+--- @param list any[]: promise or non-promise values
+--- @return Promise
 function Promise.any(list)
   vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve, reject)
@@ -333,8 +334,8 @@ end
 
 --- Equivalents to JavaScript's Promise.allSettled.
 --- Even if multiple value are resolved/rejected, value/reason is only the first value.
---- @param list table: promise or non-promise values
---- @return table: Promise
+--- @param list any[]: promise or non-promise values
+--- @return Promise
 function Promise.all_settled(list)
   vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve)
