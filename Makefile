@@ -1,9 +1,4 @@
-test:
-	vusted --shuffle
-.PHONY: test
+include spec/.shared/neovim-plugin.mk
 
-doc:
-	rm -f ./doc/promise.nvim.txt
-	nvim --headless -i NONE -n +"lua dofile('./spec/lua/promise/doc.lua')" +"quitall!"
-	cat ./doc/promise.nvim.txt
-.PHONY: doc
+spec/.shared/neovim-plugin.mk:
+	git clone https://github.com/notomo/workflow.git --depth 1 spec/.shared
