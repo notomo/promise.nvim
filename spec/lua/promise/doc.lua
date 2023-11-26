@@ -1,6 +1,5 @@
 local example_path = "./spec/lua/promise/example.lua"
 
-vim.o.runtimepath = vim.fn.getcwd() .. "," .. vim.o.runtimepath
 local wait = dofile(example_path)
 vim.wait(1000, function()
   return wait.finished
