@@ -1,3 +1,4 @@
+local util = require("genvdoc.util")
 local example_path = "./spec/lua/promise/example.lua"
 
 local wait = dofile(example_path)
@@ -22,7 +23,7 @@ require("genvdoc").generate("promise.nvim", {
       name = "EXAMPLES",
       body = function()
         local exclude = false
-        return require("genvdoc.util").help_code_block_from_file(example_path, {
+        return util.help_code_block_from_file(example_path, {
           include = function(line)
             exclude = exclude or line:match("finished")
             return not exclude
@@ -35,9 +36,7 @@ require("genvdoc").generate("promise.nvim", {
 })
 
 local gen_readme = function()
-  local f = io.open(example_path, "r")
-  local exmaple = f:read("*a"):gsub("local wait.*", "")
-  f:close()
+  local exmaple = util.read_all(example_path):gsub("local wait.*", "")
 
   local content = ([[
 # promise.nvim
@@ -50,8 +49,6 @@ Mainly used by embedding `lua/promise/init.lua` in plugins.
 ```lua
 %s```]]):format(exmaple)
 
-  local readme = io.open("README.md", "w")
-  readme:write(content)
-  readme:close()
+  util.write("README.md", content)
 end
 gen_readme()
