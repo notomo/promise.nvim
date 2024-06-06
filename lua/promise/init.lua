@@ -26,13 +26,16 @@ function PackedValue.first(self)
 end
 
 --- @class Promise
-local Promise = {}
+local Promise = {
+  _is_promise = true,
+}
 Promise.__index = Promise
 
 local PromiseStatus = { Pending = "pending", Fulfilled = "fulfilled", Rejected = "rejected" }
 
 local is_promise = function(v)
-  return getmetatable(v) == Promise
+  local tbl = getmetatable(v)
+  return tbl ~= nil and tbl._is_promise == true
 end
 
 local new_empty_userdata = function()
