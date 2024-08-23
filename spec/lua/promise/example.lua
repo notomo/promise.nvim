@@ -37,6 +37,18 @@ local do_async = function(i)
   end)
 end
 
+local do_async2 = function(i)
+  local promise, resolve, reject = Promise.with_resolvers()
+  vim.defer_fn(function()
+    if i % 2 == 1 then
+      resolve("ok" .. i)
+    else
+      reject("error")
+    end
+  end, i * 10)
+  return promise
+end
+
 Promise.all({ do_async(1), do_async(3), do_async(5) }):next(function(value)
   assert(vim.deep_equal(value, { "ok1", "ok3", "ok5" }))
 end)
@@ -49,14 +61,14 @@ Promise.any({ do_async(1), do_async(2) }):next(function(value)
   assert(value == "ok1")
 end)
 
-Promise.all_settled({ do_async(1), do_async(2) }):next(function(values)
+Promise.all_settled({ do_async(1), do_async2(2) }):next(function(values)
   assert(values[1].value == "ok1")
   assert(values[1].status == "fulfilled")
   assert(values[2].reason == "error")
   assert(values[2].status == "rejected")
 end)
 local wait = { finished = false }
-do_async(33):next(function() end):next(function() end):next(function() end):next(function() end):next(function()
+do_async2(33):next(function() end):next(function() end):next(function() end):next(function() end):next(function()
   wait.finished = true
 end)
 

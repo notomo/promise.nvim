@@ -368,4 +368,17 @@ function Promise.all_settled(list)
   end)
 end
 
+--- Equivalents to JavaScript's Promise.withResolvers.
+--- @return Promise
+--- @return fun(...:any) # resolve
+--- @return fun(...:any) # reject
+function Promise.with_resolvers()
+  local resolve, reject
+  local promise = Promise.new(function(res, rej)
+    resolve = res
+    reject = rej
+  end)
+  return promise, resolve, reject
+end
+
 return Promise
