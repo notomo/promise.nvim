@@ -1,5 +1,6 @@
 local helper = require("promise.test.helper")
 local Promise = helper.require("promise")
+local assert = require("assertlib").typed(assert)
 
 describe("Promise.with_resolvers()", function()
   before_each(helper.before_each)
@@ -19,7 +20,7 @@ describe("Promise.with_resolvers()", function()
     end)
     on_finished:wait()
 
-    assert.is_same("ok", got)
+    assert.same("ok", got)
   end)
 
   it("returns promise with reject", function()
@@ -36,6 +37,6 @@ describe("Promise.with_resolvers()", function()
     end)
     on_finished:wait()
 
-    assert.is_same("error", got)
+    assert.same("error", got)
   end)
 end)

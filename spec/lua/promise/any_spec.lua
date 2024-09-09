@@ -1,5 +1,6 @@
 local helper = require("promise.test.helper")
 local Promise = helper.require("promise")
+local assert = require("assertlib").typed(assert)
 
 describe("Promise.any()", function()
   before_each(helper.before_each)
@@ -22,7 +23,7 @@ describe("Promise.any()", function()
     end)
     on_finished:wait()
 
-    assert.is_same(1, got)
+    assert.same(1, got)
   end)
 
   it("rejects if empty", function()
@@ -33,7 +34,7 @@ describe("Promise.any()", function()
       on_finished()
     end)
     on_finished:wait()
-    assert.is_same({}, got)
+    assert.same({}, got)
   end)
 
   it("rejects if all promise is rejected", function()
@@ -53,6 +54,6 @@ describe("Promise.any()", function()
     end)
     on_finished:wait()
 
-    assert.is_same({ 1, 2, 3 }, got)
+    assert.same({ 1, 2, 3 }, got)
   end)
 end)

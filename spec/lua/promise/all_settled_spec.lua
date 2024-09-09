@@ -1,5 +1,6 @@
 local helper = require("promise.test.helper")
 local Promise = helper.require("promise")
+local assert = require("assertlib").typed(assert)
 
 describe("Promise.all_settled()", function()
   before_each(helper.before_each)
@@ -22,7 +23,7 @@ describe("Promise.all_settled()", function()
     end)
     on_finished:wait()
 
-    assert.is_same({
+    assert.same({
       { status = "fulfilled", value = 1 },
       { status = "rejected", reason = 2 },
       { status = "fulfilled", value = 3 },
@@ -37,6 +38,6 @@ describe("Promise.all_settled()", function()
       on_finished()
     end)
     on_finished:wait()
-    assert.is_same({}, got)
+    assert.same({}, got)
   end)
 end)

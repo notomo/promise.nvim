@@ -1,5 +1,6 @@
 local helper = require("promise.test.helper")
 local Promise = helper.require("promise")
+local assert = require("assertlib").typed(assert)
 
 describe("Promise.race()", function()
   before_each(helper.before_each)
@@ -30,7 +31,7 @@ describe("Promise.race()", function()
     end)
     on_finished:wait()
 
-    assert.is_same(2, got)
+    assert.same(2, got)
   end)
 
   it("rejects if any promise is rejected", function()

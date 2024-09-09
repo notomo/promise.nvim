@@ -1,5 +1,6 @@
 local helper = require("promise.test.helper")
 local Promise = helper.require("promise")
+local assert = require("assertlib").typed(assert)
 
 describe("promise:finally()", function()
   before_each(helper.before_each)
@@ -42,7 +43,7 @@ describe("promise:finally()", function()
       end)
     on_finished:wait()
 
-    assert.is_same(want, got)
+    assert.same(want, got)
   end)
 
   it("continues from catch()", function()
@@ -84,6 +85,6 @@ describe("promise:finally()", function()
       end)
     on_finished:wait()
 
-    assert.is_same(want, got)
+    assert.same(want, got)
   end)
 end)

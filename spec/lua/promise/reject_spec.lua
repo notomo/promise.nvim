@@ -1,5 +1,6 @@
 local helper = require("promise.test.helper")
 local Promise = helper.require("promise")
+local assert = require("assertlib").typed(assert)
 
 describe("Promise.reject()", function()
   before_each(helper.before_each)
@@ -24,7 +25,7 @@ describe("Promise.reject()", function()
     end)
 
     helper.wait(p)
-    assert.is_same({ want1, want2 }, got)
+    assert.same({ want1, want2 }, got)
   end)
 
   it("if the argument is a promise, returns the promise", function()
