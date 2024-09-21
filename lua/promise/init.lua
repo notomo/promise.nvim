@@ -1,3 +1,4 @@
+---@diagnostic disable: invisible
 local vim = vim
 
 local PackedValue = {}
@@ -26,6 +27,13 @@ function PackedValue.first(self)
 end
 
 --- @class Promise
+--- @field private _status "pending"|"fulfilled"|"rejected"
+--- @field private _value any
+--- @field private _queued Promise[]
+--- @field private _unhandled_detector table
+--- @field private _on_fullfilled (fun(...:any):(...:any))?
+--- @field private _on_rejected (fun(...:any):(...:any))?
+--- @field private _handled boolean
 local Promise = {
   _is_promise = true,
 }
@@ -213,8 +221,8 @@ function Promise._start_reject(self, value)
 end
 
 --- Equivalents to JavaScript's Promise.then.
---- @param on_fullfilled (fun(...:any):any)?: A callback on fullfilled.
---- @param on_rejected (fun(...:any):any)?: A callback on rejected.
+--- @param on_fullfilled (fun(...:any):(...:any))?: A callback on fullfilled.
+--- @param on_rejected (fun(...:any):(...:any))?: A callback on rejected.
 --- @return Promise
 function Promise.next(self, on_fullfilled, on_rejected)
   vim.validate({
@@ -235,7 +243,7 @@ function Promise.next(self, on_fullfilled, on_rejected)
 end
 
 --- Equivalents to JavaScript's Promise.catch.
---- @param on_rejected (fun(...:any):any)?: A callback on rejected.
+--- @param on_rejected (fun(...:any):(...:any))?: A callback on rejected.
 --- @return Promise
 function Promise.catch(self, on_rejected)
   return self:next(nil, on_rejected)
