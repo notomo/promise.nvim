@@ -51,10 +51,6 @@ local new_empty_userdata = function()
 end
 
 local new_pending = function(on_fullfilled, on_rejected)
-  vim.validate({
-    on_fullfilled = { on_fullfilled, "function", true },
-    on_rejected = { on_rejected, "function", true },
-  })
   local tbl = {
     _status = PromiseStatus.Pending,
     _queued = {},
@@ -85,8 +81,6 @@ end
 --- @param executor fun(resolve:fun(...:any),reject:fun(...:any))
 --- @return Promise
 function Promise.new(executor)
-  vim.validate({ executor = { executor, "function" } })
-
   local self = new_pending()
 
   local resolve = function(...)
@@ -225,10 +219,6 @@ end
 --- @param on_rejected (fun(...:any):(...:any))?: A callback on rejected.
 --- @return Promise
 function Promise.next(self, on_fullfilled, on_rejected)
-  vim.validate({
-    on_fullfilled = { on_fullfilled, "function", true },
-    on_rejected = { on_rejected, "function", true },
-  })
   local promise = new_pending(on_fullfilled, on_rejected)
   table.insert(self._queued, promise)
   vim.schedule(function()
@@ -253,7 +243,6 @@ end
 --- @param on_finally fun()
 --- @return Promise
 function Promise.finally(self, on_finally)
-  vim.validate({ on_finally = { on_finally, "function", true } })
   return self
     :next(function(...)
       on_finally()
@@ -270,7 +259,6 @@ end
 --- @param list any[]: promise or non-promise values
 --- @return Promise
 function Promise.all(list)
-  vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve, reject)
     local remain = #list
     if remain == 0 then
@@ -299,7 +287,6 @@ end
 --- @param list any[]: promise or non-promise values
 --- @return Promise
 function Promise.race(list)
-  vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve, reject)
     for _, e in ipairs(list) do
       Promise.resolve(e)
@@ -318,7 +305,6 @@ end
 --- @param list any[]: promise or non-promise values
 --- @return Promise
 function Promise.any(list)
-  vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve, reject)
     local remain = #list
     if remain == 0 then
@@ -348,7 +334,6 @@ end
 --- @param list any[]: promise or non-promise values
 --- @return Promise
 function Promise.all_settled(list)
-  vim.validate({ list = { list, "table" } })
   return Promise.new(function(resolve)
     local remain = #list
     if remain == 0 then
