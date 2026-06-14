@@ -1,5 +1,8 @@
+local ntf = require("ntf")
+local describe, it, before_each, after_each, finally =
+  ntf.describe, ntf.it, ntf.before_each, ntf.after_each, ntf.finally
 local helper = require("promise.test.helper")
-local Promise = helper.require("promise")
+local Promise = require("promise")
 
 describe("unhandled rejection detector", function()
   before_each(helper.before_each)
