@@ -1,6 +1,5 @@
 local ntf = require("ntf")
-local describe, it, before_each, after_each, finally =
-  ntf.describe, ntf.it, ntf.before_each, ntf.after_each, ntf.finally
+local describe, it, before_each, after_each = ntf.describe, ntf.it, ntf.before_each, ntf.after_each
 local helper = require("promise.test.helper")
 local Promise = require("promise")
 local assert = require("assertlib").typed(ntf.assert)
