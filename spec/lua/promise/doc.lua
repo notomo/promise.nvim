@@ -41,6 +41,10 @@ local gen_readme = function()
   local content = ([[
 # promise.nvim
 
+> [!WARNING]
+> This repository is no longer maintained.
+> Use `vim.async` instead.
+
 This implements `Promise` to use with neovim lua.
 Mainly used by embedding `lua/promise/init.lua` in plugins.
 
